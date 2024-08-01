@@ -1,0 +1,22 @@
+stages:
+  - sync
+
+variables:
+
+
+sync:
+  stage: sync
+  #image: hub.nexdev.net/base/dtzar/helm-kubectl:3.12.3
+  tags:
+    - docker
+  when: manual
+  before_script:
+    - |
+      git config --global user.email 'rocketor.vn@luminet.vn'
+      git config --global user.name 'Rocketor.VN'
+      git config --global credential.helper store
+      echo 'https://oauth2:glpat-YEB21UY6bY8HGs5KpzVk@gitlab.com' >> $HOME/.git-credentials
+      echo -e 'https://oauth2:juiiAcyhzLK5j7LLxc76@git3.nexdev.net\n' >> $HOME/.git-credentials
+  script:
+    - git clone https://gitlab.com/inwoker/tgs/tgs-services-api.git tgs-services-api
+    - git clone https://git3.nexdev.net/tgs/sync-data.git sync-data
