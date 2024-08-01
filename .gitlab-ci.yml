@@ -2,11 +2,11 @@ stages:
   - sync
 
 variables:
-
+  INWORKER_NAMESPACE_ID: 5696
+  RAYPROSOFT_NAMESPACE_ID: 5695
 
 sync:
   stage: sync
-  #image: hub.nexdev.net/base/dtzar/helm-kubectl:3.12.3
   tags:
     - docker
   when: manual
@@ -18,6 +18,6 @@ sync:
       echo 'https://oauth2:glpat-YEB21UY6bY8HGs5KpzVk@gitlab.com' >> $HOME/.git-credentials
       echo -e 'https://oauth2:juiiAcyhzLK5j7LLxc76@git3.nexdev.net\n' >> $HOME/.git-credentials
   script:
-    - git clone https://gitlab.com/inwoker/tgs/tgs-services-api.git tgs-services-api && ls tgs-services-api
-
-    - git clone https://git3.nexdev.net/tgs/sync-data.git sync-data && ls sync-data
+    - git clone https://gitlab.com/inwoker/tgs/tgs-services-api.git tgs-services-api
+    - export PROJECTNAME=tgs-services-api1
+    - curl --no-progress-meter --request POST --header "PRIVATE-TOKEN:$GITLAB_TOKEN" -F path=$PROJECTNAME -F namespace_id=$INWORKER_NAMESPACE_ID -F initialize_with_readme=false --url "$GITLAB_API_URL/projects/"
