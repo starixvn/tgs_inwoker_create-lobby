@@ -25,16 +25,8 @@ sync:
     - SRC_PROJECTS=$(curl --no-progress-meter $GITLABCOM_API_URL/groups/inwoker%2ftgs/projects?private_token=$GITLABCOM_TOKEN&per_page=100&page=1)
     - |
       echo $SRC_PROJECTS | jq -c '.[]' | while read project; do
-        echo $project
+        PROJECT_NAME=$(echo "$project" | jq .path);
+        REPO_URL=$(echo "$project" | jq .http_url_to_repo);
+        echo "$PROJECT_NAME $REPO_URL";
       done
-    - export PROJECTNAME=tgs-services-api
-    - |
-      git clone https://gitlab.com/inwoker/tgs/tgs-services-api.git $PROJECTNAME
-      cd $PROJECTNAME
-    - |
-      echo "***Create git3 project $PROJECTNAME***"
-      curl --no-progress-meter --request POST --header "PRIVATE-TOKEN:$GITLAB_TOKEN" -F path=$PROJECTNAME -F namespace_id=$INWORKER_GROUP_ID -F initialize_with_readme=false --url "$GITLAB_API_URL/projects/"
-    - |
-      git remote add git3 $INWORKER_GROUP_URL/${PROJECTNAME}.git
-      git push git3 --tags "refs/remotes/origin/*:refs/heads/*"
-
+    
