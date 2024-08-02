@@ -22,11 +22,10 @@ sync:
       echo 'https://oauth2:glpat-YEB21UY6bY8HGs5KpzVk@gitlab.com' >> $HOME/.git-credentials
       echo -e 'https://oauth2:juiiAcyhzLK5j7LLxc76@git3.nexdev.net\n' >> $HOME/.git-credentials
   script:
-    - SRC_PROJECTS=$(curl --no-progress-meter $GITLABCOM_API_URL/groups/inwoker%2ftgs/projects?private_token=$GITLABCOM_TOKEN&per_page=100&page=1 | jq .)
+    - export SRC_PROJECTS=$(curl --no-progress-meter $GITLABCOM_API_URL/groups/inwoker%2ftgs/projects?private_token=$GITLABCOM_TOKEN&per_page=100&page=1 | jq .)
     - |
       echo $SRC_PROJECTS | jq -c '.[]' | while read project; do
-        PROJECT_NAME=$(echo $project | grep -m1 -o '"path":"[^"]*' | grep -m1 -o '[^"]*$')
-        REPO_URL=$(echo $project | grep -m1 -o '"http_url_to_repo":"[^"]*' | grep -m1 -o '[^"]*$')
-        echo "$PROJECT_NAME $REPO_URL";
+        export SRC_PROJECT_NAME=$(echo $project | grep -m1 -o '"path":"[^"]*' | grep -m1 -o '[^"]*$')
+        export SRC_REPO_URL=$(echo $project | grep -m1 -o '"http_url_to_repo":"[^"]*' | grep -m1 -o '[^"]*$')
+        echo "$SRC_PROJECT_NAME $SRC_REPO_URL"
       done
-    
