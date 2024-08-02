@@ -27,5 +27,12 @@ sync:
       echo $SRC_PROJECTS | jq -c '.[]' | while read project; do
         export SRC_PROJECT_NAME=$(echo $project | grep -m1 -o '"path":"[^"]*' | grep -m1 -o '[^"]*$')
         export SRC_REPO_URL=$(echo $project | grep -m1 -o '"http_url_to_repo":"[^"]*' | grep -m1 -o '[^"]*$')
-        echo "$SRC_PROJECT_NAME $SRC_REPO_URL"
+        echo "***$SRC_PROJECT_NAME $SRC_REPO_URL***"
+        git clone $SRC_REPO_URL $SRC_PROJECT_NAME
+        cd $SRC_PROJECT_NAME
+        echo "***Create git3 project $SRC_PROJECT_NAME***"
+        curl --no-progress-meter --request POST --header "PRIVATE-TOKEN:$GITLAB_TOKEN" -F path=$SRC_PROJECT_NAME -F namespace_id=$INWORKER_GROUP_ID -F initialize_with_readme=false --url "$GITLAB_API_URL/projects/"
+        echo "***Push to git3 $SRC_PROJECT_NAME***"
+        git remote add git3 $INWORKER_GROUP_URL/${SRC_PROJECT_NAME}.git
+        git push git3 --tags "refs/remotes/origin/*:refs/heads/*"
       done
