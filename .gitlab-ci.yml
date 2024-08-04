@@ -15,7 +15,9 @@ variables:
   stage: sync
   tags:
     - docker
-  when: manual
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - when: manual
   before_script:
     - |
       git config --global user.email 'rocketor.vn@luminet.vn'
@@ -46,7 +48,7 @@ sync_inworker_page1:
   variables:
     GITLABCOM_GROUP: $INWORKER_GITLABCOM_GROUP
     GITLABCOM_PAGE: 1
-    GITLABCOM_PAGE_SIZE: 25
+    GITLABCOM_PAGE_SIZE: 20
     GROUP_ID: $INWORKER_GROUP_ID
     GROUP_URL: $INWORKER_GROUP_URL
 
@@ -56,7 +58,17 @@ sync_inworker_page2:
   variables:
     GITLABCOM_GROUP: $INWORKER_GITLABCOM_GROUP
     GITLABCOM_PAGE: 2
-    GITLABCOM_PAGE_SIZE: 25
+    GITLABCOM_PAGE_SIZE: 20
+    GROUP_ID: $INWORKER_GROUP_ID
+    GROUP_URL: $INWORKER_GROUP_URL
+
+sync_inworker_page3:
+  extends:
+    - .sync_base
+  variables:
+    GITLABCOM_GROUP: $INWORKER_GITLABCOM_GROUP
+    GITLABCOM_PAGE: 3
+    GITLABCOM_PAGE_SIZE: 20
     GROUP_ID: $INWORKER_GROUP_ID
     GROUP_URL: $INWORKER_GROUP_URL
 
