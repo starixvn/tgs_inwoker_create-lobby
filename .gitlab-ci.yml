@@ -26,7 +26,7 @@ variables:
       echo 'https://oauth2:glpat-YEB21UY6bY8HGs5KpzVk@gitlab.com' >> $HOME/.git-credentials
       echo -e 'https://oauth2:juiiAcyhzLK5j7LLxc76@git3.nexdev.net\n' >> $HOME/.git-credentials
   script:
-    - export SRC_PROJECTS=$(curl --no-progress-meter "$GITLABCOM_API_URL/groups/$GITLABCOM_GROUP/projects?private_token=$GITLABCOM_TOKEN&per_page=$GITLABCOM_PAGE_SIZE&page=$GITLABCOM_PAGE&simple=true" | jq .)
+    - export SRC_PROJECTS=$(curl --no-progress-meter "$GITLABCOM_API_URL/groups/$GITLABCOM_GROUP/projects?private_token=$GITLABCOM_TOKEN&per_page=$GITLABCOM_PAGE_SIZE&page=$GITLABCOM_PAGE&simple=true&archived=false" | jq .)
     - |
       echo $SRC_PROJECTS | jq -c '.[]' | while read project; do
         export SRC_PROJECT_NAME=$(echo $project | jq '.path' | tr -d \")
