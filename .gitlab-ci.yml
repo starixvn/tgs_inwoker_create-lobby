@@ -10,6 +10,7 @@ variables:
   RAYPROSOFT_GITLABCOM_GROUP: rayprosoft
   RAYPROSOFT_GROUP_ID: 5695
   RAYPROSOFT_GROUP_URL: $CI_SERVER_URL/tgs/rayprosoft
+  NUGET_PACKAGE_REPO_URL: $CI_SERVER_URL/tgs/rayprosoft
 
 .sync_base:
   stage: sync
@@ -41,27 +42,6 @@ variables:
           git remote add git3 $GROUP_URL/${SRC_PROJECT_NAME}.git
           git push git3 --tags "refs/remotes/origin/*:refs/heads/*"
           cd ../
-        } || true
-      done
-
-sync_nuget_packages:
-  stage: sync
-  tags:
-    - docker
-  rules:
-    - when: manual
-  variables:
-    GITLABCOM_PAGE: 1
-    GITLABCOM_PAGE_SIZE: 20
-  script:
-    - export SRC_PACKAGES=$(curl --no-progress-meter "$GITLABCOM_API_URL/projects/20478010/packages?private_token=$GITLABCOM_TOKEN&per_page=$GITLABCOM_PAGE_SIZE&page=$GITLABCOM_PAGE&package_type=nuget" | jq .)
-    - |
-      echo $SRC_PACKAGES | jq -c '.[]' | while read package; do
-        {
-          export SRC_PACKAGE_NAME=$(echo $package | jq '.name' | tr -d \")
-          export SRC_VERSION=$(echo $package | jq '.version' | tr -d \")
-          export SRC_PACKAGE_FILE=$(echo "${SRC_PACKAGE_NAME}.${SRC_VERSION}.nupkg" | tr '[:upper:]' '[:lower:]')
-          echo $SRC_PACKAGE_FILE
         } || true
       done
 
