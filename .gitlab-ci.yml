@@ -44,6 +44,19 @@ variables:
         } || true
       done
 
+sync_nuget_packages:
+  stage: sync
+  tags:
+    - docker
+  rules:
+    - when: manual
+  variables:
+    GITLABCOM_PAGE: 1
+    GITLABCOM_PAGE_SIZE: 20
+  script:
+    - export SRC_PACKAGES=$(curl --no-progress-meter "$GITLABCOM_API_URL/projects/20478010/packages?private_token=$GITLABCOM_TOKEN&per_page=$GITLABCOM_PAGE_SIZE&page=$GITLABCOM_PAGE&package_type=nuget" | jq .)
+    - echo $SRC_PACKAGES
+
 sync_inworker_page1:
   extends:
     - .sync_base
