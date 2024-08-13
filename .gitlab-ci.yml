@@ -55,7 +55,15 @@ sync_nuget_packages:
     GITLABCOM_PAGE_SIZE: 20
   script:
     - export SRC_PACKAGES=$(curl --no-progress-meter "$GITLABCOM_API_URL/projects/20478010/packages?private_token=$GITLABCOM_TOKEN&per_page=$GITLABCOM_PAGE_SIZE&page=$GITLABCOM_PAGE&package_type=nuget" | jq .)
-    - echo $SRC_PACKAGES
+    - |
+      echo $SRC_PACKAGES | jq -c '.[]' | while read package; do
+        {
+          export SRC_PACKAGE_NAME=$(echo $package | jq '.name' | tr -d \")
+          export SRC_VERSION=$(echo $package | jq '.version' | tr -d \")
+          export SRC_PACKAGE_FILE=$(echo "${SRC_PACKAGE_NAME}.${SRC_VERSION}.nupkg" | tr '[:upper:]' '[:lower:]')
+          echo $SRC_PACKAGE_FILE
+        } || true
+      done
 
 sync_inworker_page1:
   extends:
