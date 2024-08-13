@@ -19,7 +19,7 @@ variables:
           echo "Download $SRC_PACKAGE_FILE"
           curl --user $GITLABCOM_USER:$GITLABCOM_TOKEN "$GITLABCOM_API_URL/projects/20478010/packages/nuget/download/$SRC_PACKAGE_NAME/$SRC_VERSION/$SRC_PACKAGE_FILE" > $SRC_PACKAGE_FILE
           echo "Upload to git3 $SRC_PACKAGE_FILE"
-          curl --request PUT --form package=@"$SRC_PACKAGE_FILE" --user luminet.ci:$GITLAB_TOKEN "$GITLAB_API_URL/projects/1326/packages/nuget/"
+          curl --request PUT --form package=@"$SRC_PACKAGE_FILE" --user luminet.ci:$GITLAB_TOKEN "$GITLAB_API_URL/projects/1405/packages/nuget/"
         } || true
       done
 
